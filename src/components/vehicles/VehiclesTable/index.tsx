@@ -11,7 +11,8 @@ import {
 import { cn } from "@/lib/utils";
 import type { Vehicle } from "@/types/vehicles.types";
 import { formatDate, getStayTime, getVehicleStatus } from "@/utils/formaters";
-import { Edit, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { EditVehicleDialog } from "../Dialogs/EditVehicleDialog";
 
 const columns = [
   "Placa",
@@ -82,13 +83,7 @@ export function VehiclesTable({ data, isLoading }: VehiclesTableProps) {
                 </TableCell>
                 <TableCell>
                   <div className="space-x-2">
-                    <Button
-                      size="icon-sm"
-                      variant="outline"
-                      className="bg-white text-muted-foreground"
-                    >
-                      <Edit />
-                    </Button>
+                    <EditVehicleDialog editingVehicle={vehicle} />
                     <Button size="icon-sm">
                       <LogOut />
                     </Button>

@@ -14,8 +14,8 @@ export async function getVehicles() {
       totalValue: 25,
       exitAt: undefined,
       status: "ACTIVE" as VehicleStatus,
-      createdAt: "2026-01-29 09:48:32",
-      updatedAt: "2026-01-29 16:48:32",
+      createdAt: "2026-01-31 02:48:32",
+      updatedAt: "2026-01-31 16:48:32",
     },
     {
       id: "afeaefaefeaefa",
@@ -25,8 +25,8 @@ export async function getVehicles() {
       totalValue: 80,
       exitAt: undefined,
       status: "FINISHED" as VehicleStatus,
-      createdAt: "2026-01-28 16:48:32",
-      updatedAt: "2026-01-29 16:48:32",
+      createdAt: "2026-01-30 16:48:32",
+      updatedAt: "2026-01-31 16:48:32",
     },
   ];
   await spleep();

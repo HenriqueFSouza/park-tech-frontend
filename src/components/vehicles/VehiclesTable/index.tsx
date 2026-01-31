@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -11,8 +10,8 @@ import {
 import { cn } from "@/lib/utils";
 import type { Vehicle } from "@/types/vehicles.types";
 import { formatDate, getStayTime, getVehicleStatus } from "@/utils/formaters";
-import { LogOut } from "lucide-react";
 import { EditVehicleDialog } from "../Dialogs/EditVehicleDialog";
+import { ExitVehicleDialog } from "../Dialogs/ExitVehicleDialog";
 
 const columns = [
   "Placa",
@@ -84,9 +83,7 @@ export function VehiclesTable({ data, isLoading }: VehiclesTableProps) {
                 <TableCell>
                   <div className="space-x-2">
                     <EditVehicleDialog editingVehicle={vehicle} />
-                    <Button size="icon-sm">
-                      <LogOut />
-                    </Button>
+                    <ExitVehicleDialog vehicle={vehicle} />
                   </div>
                 </TableCell>
               </TableRow>

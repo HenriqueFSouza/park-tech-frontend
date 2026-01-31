@@ -32,3 +32,15 @@ export function getVehicleStatus(status: VehicleStatus) {
 
   return options[status];
 }
+
+export function formatDateToDMY(dateParam: string | Date) {
+  const date = typeof dateParam === "string" ? new Date(dateParam) : dateParam;
+
+  const formater = new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  }).format(date);
+
+  return formater;
+}

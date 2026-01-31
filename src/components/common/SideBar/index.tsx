@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Car, LayoutDashboard } from "lucide-react";
+import { Car, LayoutDashboard, Users } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { Logo } from "../Logo";
 
@@ -15,6 +15,11 @@ export function SideBar() {
       label: "Veículos",
       icon: Car,
       href: "/vehicles",
+    },
+    {
+      label: "Usuários",
+      icon: Users,
+      href: "/users",
     },
   ];
 

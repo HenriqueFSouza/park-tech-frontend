@@ -1,7 +1,7 @@
 // import { api } from "@/lib/axios";
 
 import type { VehicleStatus } from "@/types/vehicles.types";
-import { spleep } from "@/utils/sleep";
+import { sleep } from "@/utils/sleep";
 
 export async function getVehicles() {
   //   const response = await api.get("/parking");
@@ -29,6 +29,6 @@ export async function getVehicles() {
       updatedAt: "2026-01-31 16:48:32",
     },
   ];
-  await spleep();
+  await sleep();
   return { data: mockVechiles };
 }

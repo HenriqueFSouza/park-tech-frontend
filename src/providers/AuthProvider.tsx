@@ -12,6 +12,7 @@ type AuthContextData = {
   isAuthenticated: boolean;
   isLoading: boolean;
   saveUser: (data: SaveUserProps) => void;
+  logOut: () => void;
 };
 
 interface AuthProviderProps {
@@ -29,6 +30,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(data.user);
     handleSetStorage(data);
     setIsAuthenticated(true);
+  }
+
+  function logOut() {
+    setIsAuthenticated(false);
+    setIsLoading(false);
+    setUser(null);
+    localStorage.removeItem("@park_tech:user");
+    localStorage.removeItem("@park_tech:token");
+    window.location.replace("/login");
   }
 
   function handleSetStorage({ user, token }: SaveUserProps) {
@@ -63,7 +73,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, isAuthenticated, saveUser }}
+      value={{ user, isLoading, isAuthenticated, saveUser, logOut }}
     >
       {children}
     </AuthContext.Provider>

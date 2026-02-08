@@ -6,24 +6,26 @@ interface UsersResponse {
   data: User[] | [];
   error: boolean;
   isLoading: boolean;
+  refetch: () => void;
 }
 
 export const useUsers = (): UsersResponse => {
   const [data, setData] = useState<User[] | []>([]);
   const [error, setError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      try {
-        const response = await getUsers();
-        setData(response.data);
-      } catch {
-        setError(true);
-      }
+  async function fetchData() {
+    try {
+      const response = await getUsers();
+      setData(response);
+    } catch {
+      setError(true);
+    } finally {
       setIsLoading(false);
     }
+  }
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -31,5 +33,6 @@ export const useUsers = (): UsersResponse => {
     data,
     error,
     isLoading: isLoading,
+    refetch: fetchData,
   };
 };

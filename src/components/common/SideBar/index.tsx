@@ -1,11 +1,21 @@
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Car, DollarSign, LayoutDashboard, Users } from "lucide-react";
+import { useAuth } from "@/providers/AuthProvider";
+import {
+  Car,
+  DollarSign,
+  LayoutDashboard,
+  LogOutIcon,
+  Users,
+} from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { Logo } from "../Logo";
 
 export function SideBar() {
   const { pathname } = useLocation();
-  const menuItems = [
+  const { user, logOut } = useAuth();
+
+  const adminMenuItems = [
     {
       label: "Dashboard",
       icon: LayoutDashboard,
@@ -27,6 +37,17 @@ export function SideBar() {
       href: "/prices",
     },
   ];
+
+  const operatorMenuItems = [
+    {
+      label: "Veículos",
+      icon: Car,
+      href: "/vehicles",
+    },
+  ];
+
+  const isAdmin = user?.role === "ADMIN";
+  const menuItems = isAdmin ? adminMenuItems : operatorMenuItems;
 
   return (
     <aside className="bg-sidebar w-65 fixed top-0 left-0 h-full">
@@ -60,6 +81,14 @@ export function SideBar() {
           })}
         </ul>
       </nav>
+
+      <Button
+        className="fixed bottom-4 left-4 w-56 text-destructive hover:bg-destructive/50 hover:text-white font-semibold"
+        onClick={logOut}
+      >
+        <LogOutIcon />
+        Sair
+      </Button>
     </aside>
   );
 }

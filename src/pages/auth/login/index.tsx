@@ -1,24 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/providers/AuthProvider";
+import { Spinner } from "@/components/ui/spinner";
 import { loginSchema, type LoginSchema } from "@/schemas/auth/loginSchema";
+import { login } from "@/services/auth/login.service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
-  const context = useAuth();
+  const navigate = useNavigate();
 
-  console.log(context);
-
-  const onSubmit = (data: LoginSchema) => {
-    console.log("Login Data", data);
+  const onSubmit = async (data: LoginSchema) => {
+    try {
+      await login(data);
+      toast.success("Login realizado com sucesso!");
+      navigate("/vehicles");
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        const errorMessage = err.response?.data.message;
+        toast.error(errorMessage || "Erro ao realizar login");
+      }
+    }
   };
 
   return (
@@ -51,7 +62,16 @@ function LoginPage() {
         {...register("password")}
       />
 
-      <Button className="w-full">Entrar</Button>
+      <Button className="w-full" disabled={isSubmitting}>
+        {isSubmitting ? (
+          <>
+            <Spinner />
+            Autenticando...
+          </>
+        ) : (
+          "Entrar"
+        )}
+      </Button>
 
       <Button variant="link">Não tem uma conta? Crie agora</Button>
     </form>

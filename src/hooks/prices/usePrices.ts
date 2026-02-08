@@ -6,24 +6,26 @@ interface PricesResponse {
   data: Price[] | [];
   error: boolean;
   isLoading: boolean;
+  refetch: () => void;
 }
 
 export const usePrices = (): PricesResponse => {
   const [data, setData] = useState<Price[] | []>([]);
   const [error, setError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      try {
-        const response = await getPrices();
-        setData(response.data);
-      } catch {
-        setError(true);
-      }
+  async function fetchData() {
+    try {
+      const response = await getPrices();
+      setData(response);
+    } catch {
+      setError(true);
+    } finally {
       setIsLoading(false);
     }
+  }
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -31,5 +33,6 @@ export const usePrices = (): PricesResponse => {
     data,
     error,
     isLoading: isLoading,
+    refetch: fetchData,
   };
 };

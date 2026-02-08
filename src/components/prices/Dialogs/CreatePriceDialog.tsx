@@ -10,29 +10,54 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import {
   createPriceSchema,
   type CreatePriceSchema,
 } from "@/schemas/prices/createPriceSchema";
+import { createPrice } from "@/services/prices/prices.service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-export function CreatePriceDialog() {
+interface CreatePriceDialogProps {
+  onSuccess: () => void;
+}
+export function CreatePriceDialog({ onSuccess }: CreatePriceDialogProps) {
+  const [open, setOpen] = useState(false);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(createPriceSchema),
+    defaultValues: {
+      additionalHourPrice: undefined,
+      firstHourPrice: undefined,
+    },
   });
 
-  const onSubmit = (data: CreatePriceSchema) => {
-    console.log("New price data", data);
+  const onSubmit = async (data: CreatePriceSchema) => {
+    try {
+      await createPrice(data);
+      toast.success("Preço criado com sucesso!");
+      reset();
+      setOpen(false);
+      onSuccess();
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        const errorMessage = err.response?.data.message;
+        toast.success(errorMessage || "Usuário criado com sucesso!");
+      }
+    }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <Plus />
@@ -69,7 +94,15 @@ export function CreatePriceDialog() {
             <DialogClose asChild>
               <Button variant="outline">Cancelar</Button>
             </DialogClose>
-            <Button type="submit">Criar Preço</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Spinner /> Criando...
+                </>
+              ) : (
+                "Criar Preço"
+              )}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -23,9 +23,14 @@ const columns = [
 interface PricesTableProps {
   data: Price[];
   isLoading: boolean;
+  onEditSucess: () => void;
 }
 
-export function PricesTable({ data, isLoading }: PricesTableProps) {
+export function PricesTable({
+  data,
+  isLoading,
+  onEditSucess,
+}: PricesTableProps) {
   return (
     <Table>
       <TableHeader>
@@ -79,7 +84,10 @@ export function PricesTable({ data, isLoading }: PricesTableProps) {
                 <TableCell>{formatDateToDMY(price.createdAt)}</TableCell>
                 <TableCell>
                   <div className="space-x-2">
-                    <EditPriceDialog editingPrice={price} />
+                    <EditPriceDialog
+                      editingPrice={price}
+                      onSuccess={onEditSucess}
+                    />
                   </div>
                 </TableCell>
               </TableRow>

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { useAuth } from "@/providers/AuthProvider";
 import { loginSchema, type LoginSchema } from "@/schemas/auth/loginSchema";
 import { login } from "@/services/auth/login.service";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,10 +19,12 @@ function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
   const navigate = useNavigate();
+  const { saveUser } = useAuth();
 
   const onSubmit = async (data: LoginSchema) => {
     try {
-      await login(data);
+      const loginData = await login(data);
+      saveUser(loginData);
       toast.success("Login realizado com sucesso!");
       navigate("/vehicles");
     } catch (err) {

@@ -12,7 +12,7 @@ import { useVehicles } from "@/hooks/vehicles/useVehicles";
 import { Filter } from "lucide-react";
 
 function VehiclesPage() {
-  const { data, isLoading } = useVehicles();
+  const { data, isLoading, refetch } = useVehicles();
   return (
     <div className="space-y-4">
       <h1 className="font-semibold text-2xl">Gestão de Veículos</h1>
@@ -38,10 +38,10 @@ function VehiclesPage() {
           </Select>
         </div>
 
-        <CreateVehicleDialog />
+        <CreateVehicleDialog onSuccess={refetch} />
       </div>
 
-      <VehiclesTable data={data} isLoading={isLoading} />
+      <VehiclesTable data={data} isLoading={isLoading} onEditSucess={refetch} />
     </div>
   );
 }

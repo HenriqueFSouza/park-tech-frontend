@@ -10,24 +10,36 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import {
   editVehicleSchema,
   type EditVehicleSchema,
 } from "@/schemas/vehicles/editVehicleSchema";
+import { editVehicle } from "@/services/vehicles/vehicles.service";
 import type { Vehicle } from "@/types/vehicles.types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { Edit } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 interface EditVehicleDialogProps {
   editingVehicle: Vehicle;
+  onSuccess: () => void;
 }
 
-export function EditVehicleDialog({ editingVehicle }: EditVehicleDialogProps) {
+export function EditVehicleDialog({
+  editingVehicle,
+  onSuccess,
+}: EditVehicleDialogProps) {
+  const [open, setOpen] = useState(false);
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(editVehicleSchema),
     defaultValues: {
@@ -37,12 +49,23 @@ export function EditVehicleDialog({ editingVehicle }: EditVehicleDialogProps) {
     },
   });
 
-  const onSubmit = (data: EditVehicleSchema) => {
-    console.log("New vehicle data", data);
+  const onSubmit = async (data: EditVehicleSchema) => {
+    try {
+      await editVehicle({ id: editingVehicle.id, ...data });
+      toast.success("Veículo editado com sucesso!");
+      setOpen(false);
+      onSuccess();
+      reset();
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        const errorMessage = err.response?.data.message;
+        toast.success(errorMessage || "Usuário criado com sucesso!");
+      }
+    }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           size="icon-sm"
@@ -85,7 +108,16 @@ export function EditVehicleDialog({ editingVehicle }: EditVehicleDialogProps) {
             <DialogClose asChild>
               <Button variant="outline">Cancelar</Button>
             </DialogClose>
-            <Button type="submit">Editar Registro</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Spinner />
+                  Editando...
+                </>
+              ) : (
+                "Editar Registro"
+              )}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

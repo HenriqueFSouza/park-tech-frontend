@@ -1,34 +1,27 @@
-// import { api } from "@/lib/axios";
-
-import type { VehicleStatus } from "@/types/vehicles.types";
-import { sleep } from "@/utils/sleep";
+import { api } from "@/lib/axios";
 
 export async function getVehicles() {
-  //   const response = await api.get("/parking");
-  const mockVechiles = [
-    {
-      id: "398qy42a8f32f2",
-      color: "Preto",
-      model: "Palio",
-      plate: "DFE4R3G",
-      totalValue: 25,
-      exitAt: undefined,
-      status: "ACTIVE" as VehicleStatus,
-      createdAt: "2026-02-08 02:48:32",
-      updatedAt: "2026-01-31 16:48:32",
-    },
-    {
-      id: "afeaefaefeaefa",
-      color: "Branco",
-      model: "Hillux",
-      plate: "JGT7R8E",
-      totalValue: 80,
-      exitAt: undefined,
-      status: "FINISHED" as VehicleStatus,
-      createdAt: "2026-02-07 16:48:32",
-      updatedAt: "2026-01-31 16:48:32",
-    },
-  ];
-  await sleep();
-  return { data: mockVechiles };
+  const { data } = await api.get("/parking");
+  return data;
+}
+
+interface CreateVehiclePayload {
+  plate: string;
+  color: string;
+  model: string;
+}
+export async function createVehicle(payload: CreateVehiclePayload) {
+  const { data } = await api.post("/parking", payload);
+  return data;
+}
+
+interface EditVehiclePayload {
+  plate?: string;
+  color?: string;
+  model?: string;
+  id: string;
+}
+export async function editVehicle({ id, ...payload }: EditVehiclePayload) {
+  const { data } = await api.put(`/parking/${id}`, payload);
+  return data;
 }

@@ -26,9 +26,14 @@ const columns = [
 interface VehiclesTableProps {
   data: Vehicle[];
   isLoading: boolean;
+  onEditSucess: () => void;
 }
 
-export function VehiclesTable({ data, isLoading }: VehiclesTableProps) {
+export function VehiclesTable({
+  data,
+  isLoading,
+  onEditSucess,
+}: VehiclesTableProps) {
   return (
     <Table>
       <TableHeader>
@@ -82,7 +87,10 @@ export function VehiclesTable({ data, isLoading }: VehiclesTableProps) {
                 </TableCell>
                 <TableCell>
                   <div className="space-x-2">
-                    <EditVehicleDialog editingVehicle={vehicle} />
+                    <EditVehicleDialog
+                      editingVehicle={vehicle}
+                      onSuccess={onEditSucess}
+                    />
                     <ExitVehicleDialog vehicle={vehicle} />
                   </div>
                 </TableCell>

@@ -3,9 +3,9 @@ import { Navigate, Outlet } from "react-router-dom";
 import { Logo } from "../common/Logo";
 
 function AuthLayout() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
 
-  if (isAuthenticated) {
+  if (isAuthenticated && !isLoading) {
     return <Navigate to="/vehicles" />;
   }
 

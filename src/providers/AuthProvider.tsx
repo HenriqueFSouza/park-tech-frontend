@@ -10,6 +10,7 @@ interface SaveUserProps {
 type AuthContextData = {
   user: SaveUserProps["user"] | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   saveUser: (data: SaveUserProps) => void;
 };
 
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextData | undefined>(undefined);
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<SaveUserProps["user"] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   function saveUser(data: SaveUserProps) {
     setUser(data.user);
@@ -35,30 +37,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
     localStorage.setItem("@park_tech:token", token);
   }
 
-  function handleGetStorage() {
-    const localStorage = window.localStorage;
-    const user = localStorage.getItem("@park_tech:user");
-    if (user) {
-      setUser(JSON.parse(user));
-    }
-  }
-
   useEffect(() => {
-    async function getUser() {
+    async function checkAuth() {
+      setIsLoading(true);
       try {
+        const localStorage = window.localStorage;
+        const user = localStorage.getItem("@park_tech:user");
+        if (user) {
+          setUser(JSON.parse(user));
+        }
         await getAuthUser();
         setIsAuthenticated(true);
       } catch {
         setIsAuthenticated(false);
+        setUser(null);
+        localStorage.removeItem("@park_tech:user");
+        localStorage.removeItem("@park_tech:token");
+      } finally {
+        setIsLoading(false);
       }
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    handleGetStorage();
-    getUser();
+
+    checkAuth();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, saveUser, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{ user, isLoading, isAuthenticated, saveUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -1,23 +1,38 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import {
   registerSchema,
   type RegisterSchema,
 } from "@/schemas/auth/registerSchema";
+import { registerUser } from "@/services/auth/register.service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 function RegisterPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(registerSchema),
   });
+  const navigate = useNavigate();
 
-  const onSubmit = (data: RegisterSchema) => {
-    console.log("DATA", data);
+  const onSubmit = async (data: RegisterSchema) => {
+    try {
+      await registerUser({ role: "ADMIN", ...data });
+      toast.success("Conta criada com sucesso!");
+      navigate("/login");
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        const errorMessage = err.response?.data.message;
+        toast.error(errorMessage || "Erro ao criar conta");
+      }
+    }
   };
 
   return (
@@ -58,11 +73,23 @@ function RegisterPage() {
         {...register("password")}
       />
 
-      <Button className="w-full" type="submit">
-        Criar conta
+      <Button className="w-full" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? (
+          <>
+            <Spinner />
+            Processando...
+          </>
+        ) : (
+          "Criar conta"
+        )}
       </Button>
 
-      <Button variant="link">Já tem uma conta? Faça o Login</Button>
+      <Link
+        to="/login"
+        className="text-[12px] text-primary font-medium hover:underline"
+      >
+        Já tem uma conta? Faça o Login
+      </Link>
     </form>
   );
 }

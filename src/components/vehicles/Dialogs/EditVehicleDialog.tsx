@@ -59,7 +59,7 @@ export function EditVehicleDialog({
     } catch (err) {
       if (err instanceof AxiosError) {
         const errorMessage = err.response?.data.message;
-        toast.success(errorMessage || "Usuário criado com sucesso!");
+        toast.success(errorMessage || "Erro ao editar veículo");
       }
     }
   };

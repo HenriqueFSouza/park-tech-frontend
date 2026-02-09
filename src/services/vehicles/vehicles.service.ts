@@ -28,3 +28,12 @@ export async function editVehicle({ id, ...payload }: EditVehiclePayload) {
   const { data } = await api.put(`/parking/${id}`, payload);
   return data;
 }
+
+export async function exitVehicle({ id }: { id: string }) {
+  return await api.post(`/parking/${id}/exit`);
+}
+
+export async function getVehiclePrice({ id }: { id: string }) {
+  const { data } = await api.get(`/parking/${id}/price`);
+  return data;
+}

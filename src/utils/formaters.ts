@@ -44,3 +44,12 @@ export function formatDateToDMY(dateParam: string | Date) {
 
   return formater;
 }
+
+export function formatCurrency(value?: string | number) {
+  const formater = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(Number(value));
+
+  return formater;
+}

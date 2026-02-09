@@ -91,7 +91,12 @@ export function VehiclesTable({
                       editingVehicle={vehicle}
                       onSuccess={onEditSucess}
                     />
-                    <ExitVehicleDialog vehicle={vehicle} />
+                    {isActive && (
+                      <ExitVehicleDialog
+                        vehicle={vehicle}
+                        onSuccess={onEditSucess}
+                      />
+                    )}
                   </div>
                 </TableCell>
               </TableRow>

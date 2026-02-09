@@ -9,14 +9,19 @@ interface VeehiclesResponse {
   refetch: () => void;
 }
 
-export const useVehicles = (): VeehiclesResponse => {
+interface UseVehiclesParams {
+  search?: string;
+  status?: "ACTIVE" | "FINISHED";
+}
+
+export const useVehicles = (params: UseVehiclesParams): VeehiclesResponse => {
   const [data, setData] = useState<Vehicle[] | []>([]);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   async function fetchData() {
     try {
-      const response = await getVehicles();
+      const response = await getVehicles(params);
       setData(response);
     } catch {
       setError(true);
@@ -24,9 +29,10 @@ export const useVehicles = (): VeehiclesResponse => {
       setIsLoading(false);
     }
   }
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [params?.search, params.status]);
 
   return {
     data,

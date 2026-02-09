@@ -8,11 +8,20 @@ import {
 } from "@/components/ui/select";
 import { CreateVehicleDialog } from "@/components/vehicles/Dialogs/CreateVehicleDialog";
 import { VehiclesTable } from "@/components/vehicles/VehiclesTable";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useVehicles } from "@/hooks/vehicles/useVehicles";
 import { Filter } from "lucide-react";
+import { useState } from "react";
 
 function VehiclesPage() {
-  const { data, isLoading, refetch } = useVehicles();
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState<"ACTIVE" | "FINISHED" | "all">("all");
+  const debouncedSearch = useDebounce(search);
+  const { data, isLoading, refetch } = useVehicles({
+    search: debouncedSearch,
+    status: status === "all" ? undefined : status,
+  });
+
   return (
     <div className="space-y-4">
       <h1 className="font-semibold text-2xl">Gestão de Veículos</h1>
@@ -23,17 +32,18 @@ function VehiclesPage() {
             placeholder="Buscar registro"
             className="h-10"
             containerClassName="w-80!"
+            onChange={(e) => setSearch(e.target.value)}
           />
 
-          <Select>
+          <Select onValueChange={(value) => setStatus(value as typeof status)}>
             <SelectTrigger className="w-52 h-10!">
               <Filter />
               <SelectValue placeholder="Todos Selecionados" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todos Selecionados</SelectItem>
-              <SelectItem value="active">Estacionado</SelectItem>
-              <SelectItem value="inative">Saída registrada</SelectItem>
+              <SelectItem value="ACTIVE">Estacionado</SelectItem>
+              <SelectItem value="FINISHED">Saída registrada</SelectItem>
             </SelectContent>
           </Select>
         </div>

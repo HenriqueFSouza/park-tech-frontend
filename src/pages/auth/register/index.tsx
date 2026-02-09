@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import {
-  registerSchema,
-  type RegisterSchema,
+    registerSchema,
+    type RegisterSchema,
 } from "@/schemas/auth/registerSchema";
 import { registerUser } from "@/services/auth/register.service";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,7 +26,7 @@ function RegisterPage() {
     try {
       await registerUser({ role: "ADMIN", ...data });
       toast.success("Conta criada com sucesso!");
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       if (err instanceof AxiosError) {
         const errorMessage = err.response?.data.message;
@@ -85,7 +85,7 @@ function RegisterPage() {
       </Button>
 
       <Link
-        to="/login"
+        to="/"
         className="text-[12px] text-primary font-medium hover:underline"
       >
         Já tem uma conta? Faça o Login

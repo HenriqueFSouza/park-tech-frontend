@@ -38,7 +38,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
     localStorage.removeItem("@park_tech:user");
     localStorage.removeItem("@park_tech:token");
-    window.location.replace("/login");
+    window.location.replace("/");
   }
 
   function handleSetStorage({ user, token }: SaveUserProps) {

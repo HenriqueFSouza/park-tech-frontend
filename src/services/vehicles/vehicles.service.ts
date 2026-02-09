@@ -1,7 +1,10 @@
 import { api } from "@/lib/axios";
 
-export async function getVehicles() {
-  const { data } = await api.get("/parking");
+interface GetVehiclesParams {
+  search?: string;
+}
+export async function getVehicles(params: GetVehiclesParams) {
+  const { data } = await api.get("/parking", { params });
   return data;
 }
 

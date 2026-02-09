@@ -7,7 +7,7 @@ export function AppLayout() {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (!isAuthenticated && !isLoading) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return (

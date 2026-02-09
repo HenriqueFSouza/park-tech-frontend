@@ -2,6 +2,7 @@ import AuthLayout from "@/components/auth/layout";
 import { AppLayout } from "@/components/common/AppLayout";
 import LoginPage from "@/pages/auth/login";
 import RegisterPage from "@/pages/auth/register";
+import DashboardPage from "@/pages/dashboard";
 import PricesPage from "@/pages/prices";
 import UsersPage from "@/pages/users";
 import VehiclesPage from "@/pages/vehicles";
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
       {
         path: "/prices",
         element: <PricesPage />,
+      },
+      {
+        path: "/dashboard",
+        element: <DashboardPage />,
       },
     ],
   },

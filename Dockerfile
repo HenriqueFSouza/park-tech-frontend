@@ -16,4 +16,4 @@ COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 5173
 
-CMD [ "nginx", "-g", "darmon off;" ]
+CMD [ "nginx", "-g", "daemon off;" ]
